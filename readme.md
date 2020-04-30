@@ -2,10 +2,10 @@
 
 the bot is intended to help in a system network operations.  
 the very first function that has been released is **acl**.  
-**acl** checks if a given packet can pass throuth some ACLs. 
+**acl** checks if a given ip packet can pass throuth  the network with network policies being applied. 
 
-That how it looks in an action:  
-![img](docs/rocket.bot.check.acl.png)
+That is how it looks in an action:  
+![img1](docs/rocket.bot.check.acl.png)
 
 **acl** uses the **batfish** under the hood.
 
@@ -13,15 +13,17 @@ That how it looks in an action:
 
 ## deployment
 
-Application consists of two modules: Bot and backend.
+The application consists of two pices: the Bot and the backend.
 
-Bot interacts with rocket.chat while the backend interacts with the batfish.
+the Bot interacts with rocket.chat instance while the backend interacts with the batfish.
 
-And finally Bot send requests to backend via GET/POST http requests.
+And finally the Bot sends requests to backend via GET/POST http requests.
 
-### 1. Bot 
+![img2](docs/rocket.bot.architecture.png)
 
-Bot is a nodejs application. It uses rocket.chat SDK and a node-fetch module. To run Bot first you have to install that modules under Bot directory.
+### 1. Deploing Bot 
+
+Bot is a nodejs application. It uses rocket.chat SDK and a node-fetch module. To run Bot first you have to install that modules under the Bot directory.
 
 ```
 cd bot
@@ -36,10 +38,10 @@ now you can run bot just typing:
 node easybot.js
 ```
 
-### 2. Backend
+### 2. Deploing Backend
 
 Backend is a python application that uses the FastAPI framework and the pybatfish library. 
-Note: py-batfish comes with pandas (Data analysisi library) version 0.26.x, but the application uses the function .to_markdown() that appeared since version 1.0.0. So packages must be installed in order: first install pybatfish, next - pandas.
+Note: pybatfish comes with pandas (Data analysisi library) version 0.26.x, but the application uses the function .to_markdown() that appeared since version 1.0.0. So packages must be installed in order: first install pybatfish, next - pandas.
 
 ```
 pip3 install pybatfish
@@ -73,8 +75,10 @@ bf_session.host = 'localhost'
 bf_set_network('bf1')
 bf_init_snapshot('./bf_snapshots/networks', 'snapshot-01', overwrite=True)
 ```
-
-batfish should find the configs and then a snapshot should be created.
-
-to run backend just type the command:
+batfish should find the configs and then a snapshot should be created. If all went well you can exit the interactive python shell and finally run the application by typing the command:
 > python3 main.py
+
+Actually you don't have to init snapshot manually every time the network configs has been changed.
+There is the special command to do that from within the application. 
+**@botname acl help** - command will help you to reveal it
+
