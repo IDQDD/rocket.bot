@@ -3,7 +3,7 @@ const { driver } = require('@rocket.chat/sdk');
 const rmap = require('./reply');
 
 // customize the following with your server and BOT account information
-const HOST = 'http://rocket.vbrr.ru';
+const HOST = 'http://rocket.xxx';
 const USER = 'easybot';
 const PASS = 'mypasswrd!';
 const BOTNAME = 'easybot';  // name  bot response to
