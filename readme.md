@@ -7,6 +7,9 @@ the very first function that has been released is **acl**.
 That is how it looks in an action:  
 ![img1](docs/rocket.bot.check.acl.png)
 
+the more detailed view:  
+![img2](docs/rocket.bot.check.acl.fragment.png)
+
 **acl** uses the **batfish** under the hood.
 
 ----
@@ -19,7 +22,7 @@ the Bot interacts with rocket.chat instance while the backend interacts with the
 
 And finally the Bot sends requests to backend via GET/POST http requests.
 
-![img2](docs/rocket.bot.architecture.png)
+![img3](docs/rocket.bot.architecture.png)
 
 ### 1. Deploing Bot 
 
