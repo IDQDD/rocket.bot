@@ -7,7 +7,7 @@ from batfish import LibBatfish
 
 NETWORK_NAME = "bf1"
 SNAPSHOT_NAME = "snapshot-01"
-SNAPSHOT_DIR = './bf_snapshots/networks/bf1'
+SNAPSHOT_DIR = './bf_snapshots/networks'
 
 app = FastAPI()
 
