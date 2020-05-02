@@ -60,8 +60,8 @@ now run batfish in a docker container:
 docker run --name batfish -v batfish-data:/data -p 8888:8888 -p 9997:9997 -p 9996:9996 batfish/allinone
 ```
 
-It's time to make sure batfish is working 
-to do that you have to prepare network configuration files and place them under the directory
+It's time to make sure batfish is working.   
+To do that you have to prepare network configuration files and place them under the directory
 > backend/bf_snapshots/networks/configs
 
 then run interactive python (ipython or bpython) and excute the following code:
