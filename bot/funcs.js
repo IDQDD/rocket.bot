@@ -55,7 +55,7 @@ function func1(args) {
 
 // ************** batfish related commands ****************//
 const fetch = require('node-fetch');
-const BATFISH_API_URL = "http://127.0.0.1:8000/api/";
+const BACKEND_API_URL = process.env.BACKEND_API_URL || "http://127.0.0.1:8000/api/";
 
 // Use: @netbot acl from=any to=10.1.2.0/24 [port=3389] [proto=tcp] 
 // rule is based on a batfishe's HeaderConstraints class params
@@ -82,7 +82,7 @@ async function check_acl(args) {
     } 
     else if (args[0] && args[0].toUpperCase() == "INIT") {
         try {
-            const response = await fetch(BATFISH_API_URL + 'initbf');
+            const response = await fetch(BACKEND_API_URL + 'initbf');
             const json = await response.json();
             return json;
         }
@@ -121,7 +121,7 @@ async function check_acl(args) {
     //return JSON.stringify(jObj);
 
     try {
-        const response = await fetch(BATFISH_API_URL + "check_acl", {
+        const response = await fetch(BACKEND_API_URL + "check_acl", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(jObj)

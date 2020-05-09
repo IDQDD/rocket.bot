@@ -1,12 +1,12 @@
 const { driver } = require('@rocket.chat/sdk');
 //const respmap = require('./reply');
-const rmap = require('./reply');
+const rmap = require('./funcs');
 
 // customize the following with your server and BOT account information
-const HOST = 'http://rocket.xxx';
-const USER = 'easybot';
-const PASS = 'mypasswrd!';
-const BOTNAME = 'easybot';  // name  bot response to
+const HOST = process.env.ROCKET_HOST || 'http://rocket.acme';
+const USER = process.env.ROCKET_USER || 'easybot';
+const PASS = process.env.ROCKET_PASS || 'mypasswrd';
+const BOTNAME = process.env.ROCKET_BOTNAME || 'easybot';  // name the bot response to
 const SSL = true;  // server uses https ?
 const ROOMS = ['sandbox'];
 
