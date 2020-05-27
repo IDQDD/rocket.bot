@@ -43,7 +43,7 @@ cd bot
 npm install
 ```
 next open up *netbot.js* file in any editor and change chatbots url, botname and credentials  
-or you can init the corresponding environment vaariables. The more detailed description of ENV can be found below in the docker section.
+or you can init the corresponding environment variables. The more detailed description of ENV can be found below in the docker section.
 
 now you can run bot just typing:
 ```
@@ -53,8 +53,8 @@ node netbot.js
 
 ### 2. Deploing Backend
 
-Backend is a python application that uses the FastAPI framework.  
-FastAPI is a pip package and it could be easily installed with the following commands:
+Backend is a python application that uses the [FastAPI](https://fastapi.tiangolo.com/) framework.  
+**FastAPI** is a pip package and it could be easily installed with the following commands:
 
 ```
 pip3 install fastapi
@@ -147,10 +147,15 @@ Based on ip address or siteID (in case of mac) requested the aplication finds th
 
 The **port** function is a recursive walker that first finds out the mac address from the arp table on a core switch and then walks from the top (core) to bottom of a network tree looking for an endport with that mac. this tree has to be described in the file: *inventory/hosts.yml*
 
+Lets pretend we have the following network topology  
+![example-topology](docs/example-topology.png)
+
+The *hosts.yml* for that topology would look like that
+
 ```yml
 ---
 n7k1:
-  hostname: n7k1
+  hostname: nexus1
   groups:
     - moscow
     - core
@@ -158,8 +163,8 @@ n7k1:
   data:
     role: core    
     children: 
-      Po14: catalyst10
-      Po12: catalyst20
+      Po10: catalyst10
+      Po20: catalyst20
       
 catalyst10:
   hostname: catalyst10  
@@ -169,21 +174,24 @@ catalyst10:
   data:
     role: access    
     children: 
-      Gi2/0/1: catalyst101
-      Gi3/0/6: catalyst102
+      Gi2/0/1: catalyst101     
       
+catalyst20:
+  hostname: catalyst20  
+  groups:    
+    - ios            
+
 catalyst101:
   hostname: catalyst101  
-  groups:
-    - moscow
-    - ios    
-  data:
-    role: access
+  groups:    
+    - ios      
 ```
 The logic here is pretty straightforward. First the application is looking for a port the mac is located behind. If that port exists in the children section of a current switch it takes the next switch name (from the *port:switch* keypair) and starts walking over it. If there is no children then the function returns the last port name.  
 Note: only hostname and group that defines a platform (ios,nxos,junos,...) is mandatory fields.
 
 #### groups.yml
+
+*groups.yml* keeps the group info such as credentials or ssh_keys and a driver name for a platform. That driver name is needed to connect to the devices using [napalm](https://napalm.readthedocs.io) or [scrapli](https://github.com/carlmontanari/scrapli) framework.
 
 ```yml
 ---
@@ -205,16 +213,14 @@ groups:
     username: rancid
     auth_private_key: ~/rocket/rancid_rsa    
 ```
-If you know [Nornir](https://nornir.readthedocs.io) both the *hosts.yml* and *groups.yml* would looks familiar. This is because I planed to use **Nornir** at the beginning. And the logic here is the same. Except I do not use complex objects. Only plain python's dictionary. First I fill up **hosts** dictionary from the *hosts.yml* and then enrich every host in the hosts with the group information.   
+If you know [Nornir](https://nornir.readthedocs.io) both the *hosts.yml* and *groups.yml* would looks familiar. This is because I planed to use **Nornir** at the beginning. And the logic here is the same. Except I do not use complex objects. Only plain python's dictionary. First I fill up **hosts** dictionary from the *hosts.yml* and then enrich every host in the **hosts** with the group information.   
 
-Thats all for now. If you have already started the application in the previous (ACL) section then it should already work.  
-just type 
-```
-@netbot port help  
-```
-and go forward...
+Thats all for now. In the previous section (deploying **acl** function) we have already started the Backend application. So it has to be working already along with the Bot process.
 
-## Docker
+Make sure the processes are running and then try to communicate with the Bot by typing different commands. Its reasonable to start from commands **acl help** or **port help**
+
+
+## Docker (optional)
 
 Now I'll try to dockerise the service to be more convinient to use
 
