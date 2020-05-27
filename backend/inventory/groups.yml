@@ -21,8 +21,3 @@ groups:
     role: core
   access:
     role: access
-
-  su:
-    site: su
-  shab:
-    site: shab

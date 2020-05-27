@@ -1,16 +1,16 @@
 ---
 sites:
-  - name: su
+  - name: moscow
     networks:
       - 10.1.0.0/17
       - 10.2.0.0/16
     core: n7k1
     siteID: 1
 
-  - name: shab
+  - name: samara
     networks:
       - 10.1.160.0/19
       - 10.1.220.0/24
-    core: shab-core
+    core: sam-core
     siteID: 2
     
