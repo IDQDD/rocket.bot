@@ -19,6 +19,12 @@ It finds a network switch and a port a hostname, ip or mac is connected to.
 And this is how the port function looks in an action:
 ![port](docs/netbotport.png)
 
+The **port** function currently supports the following platforms:  
+  - ios/iosxe (core and access)
+  - nxos (core and access)
+  - junos (access only)
+  - huawei (access only)
+
 ----
 
 ## deployment
@@ -32,7 +38,7 @@ Thus all the functions the Backend is capable of could be used not only from the
 
 Application architecure:
 
-![img3](docs/rocket.bot.architecture.png)
+![img3](docs/rocket.bot.architecture.png)  
 
 ### 1. Deploing Bot 
 
@@ -54,24 +60,21 @@ node netbot.js
 ### 2. Deploing Backend
 
 Backend is a python application that uses the [FastAPI](https://fastapi.tiangolo.com/) framework.  
-**FastAPI** is a pip package and it could be easily installed with the following commands:
-
-```
-pip3 install fastapi
-pip3 install uvicorn
-```
-
-Every backend's function comes with their uniq requires. 
-
-### 2.1 ACL
-**acl** function uses the pybatfish library. 
-Note: pybatfish comes with pandas (Data analysisi library) version 0.26.x, but the application uses the function .to_markdown() that appeared since version 1.0.0. So packages must be installed in order: first install pybatfish, next - pandas.
+**FastAPI** is a pip package that will be set up along with over libraries by issuing the command:
 
 ```
 cd backend
+pip3 install -r requirements.txt
 ```
+
+### 2.1 ACL
+**acl** function uses the pybatfish library. 
+Note: pybatfish comes with pandas (Data analysisi library) version 0.26.x, but the application uses the function .to_markdown() that appeared since version 1.0.0. So packages must be installed in order: first install pybatfish, next - pandas. So if you already have installed the needed libraries make sure **pandas** version >= 1.0.0 
 ```
-pip3 install pybatfish
+pip3 show pandas
+```
+and if not upgrade it with the following command:
+```
 pip3 install --upgrade pandas
 ```
 
@@ -109,19 +112,15 @@ There is the special command to do that from within the application.
 
 ### 2.2 PORT
 
-The **port** function code uses a set of different libraries. Note that while it is in a development/experimental state the requirements may change from time to time. 
-
-To install the needed packages issue the command:
-```
-pip3 install -r requirements.txt
-```
+The **port** function code uses [scrapli](https://github.com/carlmontanari/scrapli) librari under the hood along with common libraries such as *ipaddress* and *netaddr*. You have already set up all the libraries at the beginning of the chapter.
 
 Now we need to prepare **inventory** that describes the networks we would like to use it on.  
 There three inventory files that have to be created (edited):  
 #### site_network.yml  
 
 The **port** function supports multisites.  
-To define the site it uses file: *inventory/site_network.yml*
+Every site must have a core switch that holds an **ip arp table**.  
+The file *inventory/site_network.yml* is used to determining the relationship between IP subnets (or site id) and the core switches
 
 ```yml
 ---
@@ -137,11 +136,11 @@ sites:
     networks:
       - 10.1.160.0/19
       - 10.1.220.0/24
-    core: samara-core
+    core: sam-core
     siteID: 2
 ```
-The networks here are aggregated supernets that you are using or are going to use in the future.  
-Based on ip address or siteID (in case of mac) requested the aplication finds the core switch name it would start walking from.
+The networks here are aggregated supernets that you use or intend to use in the future.
+Based on the requested IP address or siteID, the application finds the name of the main switch it would start walking from
 
 #### hosts.yml  
 
@@ -179,7 +178,9 @@ catalyst10:
 catalyst20:
   hostname: catalyst20  
   groups:    
-    - ios            
+    - ios        
+  data:
+    transport: telnet    
 
 catalyst101:
   hostname: catalyst101  
@@ -187,11 +188,13 @@ catalyst101:
     - ios      
 ```
 The logic here is pretty straightforward. First the application is looking for a port the mac is located behind. If that port exists in the children section of a current switch it takes the next switch name (from the *port:switch* keypair) and starts walking over it. If there is no children then the function returns the last port name.  
-Note: only hostname and group that defines a platform (ios,nxos,junos,...) is mandatory fields.
+*Note1:* only hostname and group that defines a platform (ios,nxos,junos,...) is mandatory fields.  
+*Note2:* it is possible to use **transport:telnet** option for old cisco switches that do not supports ssh (look at catalyst20 options)
 
 #### groups.yml
 
-*groups.yml* keeps the group info such as credentials or ssh_keys and a driver name for a platform. That driver name is needed to connect to the devices using [napalm](https://napalm.readthedocs.io) or [scrapli](https://github.com/carlmontanari/scrapli) framework.
+*groups.yml* keeps the group info such as credentials or ssh_keys and a platform.  
+The platform name specify's the driver the underlying framework ([scrapli](https://github.com/carlmontanari/scrapli)) would use to connect to a device.
 
 ```yml
 ---
@@ -205,7 +208,7 @@ groups:
     username: backup
     password: backup
   huawei:
-    platform: huawei_vrp
+    platform: huawei
     username: admin
     password: admin
   junos:
