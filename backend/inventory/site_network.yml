@@ -7,10 +7,10 @@ sites:
     core: n7k1
     siteID: 1
 
-  - name: shab
+  - name: samara
     networks:
       - 10.1.160.0/19
       - 10.1.220.0/24
-    core: shab-core
+    core: sam-core
     siteID: 2
     
