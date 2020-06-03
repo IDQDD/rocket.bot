@@ -10,12 +10,16 @@ groups:
     password: cisco
   huawei:
     platform: huawei
-    username: admin
-    password: admin
+    username: ansible
+    password: ansible
   junos:
     platform: junos
     username: rancid
-    auth_private_key: ~/rocket/rancid_rsa
+    auth_private_key: rancid_rsa
+  ios-nfu:
+    platform: ios
+    username: cisco
+    password: cisco
     
   core:
     role: core
@@ -26,3 +30,7 @@ groups:
     site: su
   shab:
     site: shab
+
+# filials
+
+

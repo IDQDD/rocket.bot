@@ -22,7 +22,7 @@ def PrepareConnObject(host):
         'port': 23 
     }
 
-    if host['data'].get('transport') == 'telnet': 
+    if host.get('data') and host['data'].get('transport') == 'telnet': 
         my_device = { **my_device, **telnet_map }
         return my_device
     
@@ -45,6 +45,8 @@ def PrepareConnObject(host):
             'privilege_levels': PRIVS,
             'on_open': huawei_disable_paging,
             'transport': 'paramiko',
+            "timeout_socket": 20,
+            "timeout_transport": 20,
         }
         my_device = { **my_device, **huawei_opts }
 
@@ -116,25 +118,40 @@ def get_port_by_mac(host, mac, vlan=None):
 def get_mac_by_ip(host, ip):
 # supports ios and nxos platforms only
     platform_map = {
-      'ios': {
-        'driver': IOSXEDriver,
-        'cmd': f'sh ip arp {ip}',       
-      },
-      'nxos': {
-        'driver': NXOSDriver,
-        'cmd': f'sh ip arp {ip}',        
-      }
+        'ios': {
+            'driver': IOSXEDriver,
+            'cmd': f'sh ip arp {ip}',       
+        },
+        'nxos': {
+            'driver': NXOSDriver,
+            'cmd': f'sh ip arp {ip}',        
+        },
+        'huawei': {
+            'driver': IOSXEDriver,
+            'cmd': f'display arp network {ip}'
+        }
     }
 
     my_device = PrepareConnObject(host)
 
     platform = host['platform']
-    res = QuerySwitch(my_device, platform_map[platform])
+
+    if platform == 'huawei':
+        custom_textfsm = 'textfsm/huawei_display_arp_network.textfsm'
+    else:
+        custom_textfsm = None
+
+    res = QuerySwitch(my_device, platform_map[platform], custom_textfsm)
     
     if res:
+        print(f"res = {res}")
+
         mac = res[0]['mac']
-        ifName = res[0]['interface']
-        vlan = int(''.join(x for x in ifName if x.isdigit())) # transform Vlan221 to 221
+
+        if platform == 'huawei':
+            return { 'mac': mac, 'vlan': None }
+            
+        vlan = int(''.join(x for x in res[0]['interface'] if x.isdigit())) # transform Vlan221 to 221
         return { 'mac': mac, 'vlan': vlan }
     else:
         return None

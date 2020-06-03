@@ -13,4 +13,3 @@ sites:
       - 10.1.220.0/24
     core: sam-core
     siteID: 2
-    

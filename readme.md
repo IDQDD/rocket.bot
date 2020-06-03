@@ -23,7 +23,7 @@ The **port** function currently supports the following platforms:
   - ios/iosxe (core and access)
   - nxos (core and access)
   - junos (access only)
-  - huawei (access only)
+  - huawei (core and access)
 
 ----
 
