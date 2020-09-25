@@ -106,12 +106,9 @@ batfish should find the configs and then a snapshot should be created. If all we
 ```
 uvicorm main:app 
 ```
-Actually you don't have to init snapshot manually every time the network configs has been changed.  
-There is the special command to do that from within the application.  
-**@botname acl init** - command will do that for you.  
-
-Config managemnent is up to you. But if you are using oxidized (like me), you can use the **misc/oxidized_hhok_git2file.sh** script,  
-which transfers the configurations of the given devices to the Batfish snapshot directory.
+Actually you don't have to init snapshot manually every time the network configs has been changed.
+There is the special command to do that from within the application. 
+**@botname acl help** - command will help you to reveal it
 
 ### 2.2 PORT
 
