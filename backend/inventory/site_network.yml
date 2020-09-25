@@ -3,13 +3,17 @@ sites:
   - name: su
     networks:
       - 10.1.0.0/17
+      - 10.1.221.0/24
       - 10.2.0.0/16
+      - 192.168.30.0/23      
     core: n7k1
     siteID: 1
 
   - name: samara
     networks:
+      - 10.1.101.0/24
       - 10.1.160.0/19
+      - 10.1.192.0/22
       - 10.1.220.0/24
     core: sam-core
     siteID: 2

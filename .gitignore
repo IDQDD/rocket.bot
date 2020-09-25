@@ -5,6 +5,7 @@ bot/package-lock.json
 *.code-workspace
 **/passwds
 **/*.log
+*.swp
 
 # Distribution / packaging
 .Python
