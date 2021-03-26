@@ -4,7 +4,7 @@ numpy==1.18.3
 pandas==1.0.3
 pybatfish==2020.4.23.480
 pydantic==1.5.1
-PyYAML==5.3.1
+PyYAML==5.4
 starlette==0.13.2
 tabulate==0.8.7
 urllib3==1.25.9
